@@ -6,6 +6,8 @@
 
 library(rbenchmark)
 library(msa)
+library(ggplot2)
+
 
 ################### fasta file loading ###################
 # hg19 or hg38 is big big big file.
@@ -26,10 +28,10 @@ twoFirstAlignment
 threeFirstAlignment <- msa(mySequences, "Muscle")
 threeFirstAlignment
 
-benchmark(myFirstAlignment <- msa(mySequences),
-          oneFirstAlignment <- msa(mySequences, "ClustalW"), 
-          twoFirstAlignment <- msa(mySequences, "ClustalOmega"), 
-          threeFirstAlignment <- msa(mySequences, "Muscle"), order=NULL)
+results <- benchmark(myFirstAlignment <- msa(mySequences),
+                     oneFirstAlignment <- msa(mySequences, "ClustalW"), 
+                     twoFirstAlignment <- msa(mySequences, "ClustalOmega"), 
+                     threeFirstAlignment <- msa(mySequences, "Muscle"), order=NULL)
 
 ######### Benchmark results #######
 #                                                   test replications elapsed relative
@@ -38,3 +40,11 @@ benchmark(myFirstAlignment <- msa(mySequences),
 # 3 twoFirstAlignment <- msa(mySequences, "ClustalOmega")          100 122.395    3.904
 # 4     threeFirstAlignment <- msa(mySequences, "Muscle")          100  31.351    1.000
 
+qplot(seq(1.0, 4.0),
+      results$elapsed,
+      main = "Histogram for Test elapsed", 
+      xlab = "Age",  
+      fill=I("blue"), 
+      col=I("red"), 
+      alpha=I(.2),
+      xlim=c(1.0, 4.0))
